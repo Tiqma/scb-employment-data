@@ -1,0 +1,29 @@
+{
+  "sektor": [
+    "hushållens icke-vinstdrivande organisationer",
+    "kommun",
+    "näringslivet",
+    "region",
+    "samtliga sektorer",
+    "staten"
+  ],
+  "kön": [
+    "kvinnor",
+    "män",
+    "totalt"
+  ],
+  "år": [
+    "2020",
+    "2021",
+    "2022",
+    "2023",
+    "2024",
+    "2025"
+  ],
+  "tabellinnehåll": [
+    "Antal pågående anställningar",
+    "Antal pågående anställningar - anställningstid >6 månader",
+    "Antal pågående anställningar - anställningstid <=6 månader",
+    "Årlig förändring av antalet pågående anställningar"
+  ]
+}

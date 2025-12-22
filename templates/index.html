@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html lang="sv">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Antal anställningar
+    </title>
+</head>
+
+
+
+<body>
+{% include 'header.html' %}
+    <form action="/graf" method="get">
+        <label for="sektor">Sektor:</label>
+        <select name="sektor" id="sektor">
+            {% for s in sektor %}
+            <option value="{{ s }}">{{ s }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <!-- Dropdown för kön -->
+        <label for="kon">Kön:</label>
+        <select name="kon" id="kon">
+            {% for k in kon %}
+            <option value="{{ k }}">{{ k }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <!-- Dropdown för år -->
+        <label for="år">År:</label>
+        <select name="år" id="år">
+            {% for a in ar %}
+            <option value="{{ a }}">{{ a }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+        <input type="submit" value="Skicka">
+    </form>
+
+    <div>
+        <img src="data:image/png;base64,{{ plot }}" alt="Graf">
+    </div>
+</body>
+</html>
