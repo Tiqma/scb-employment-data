@@ -1,35 +1,32 @@
 import subprocess
+from unittest import result
 import matplotlib.pyplot as plt
 import pandas as pd
 from io import StringIO, BytesIO
 import json
+from analys import nice_step
 
-def nice_step(x):
-    magnitude = 10 ** int(len(str(int(x))) - 1)
-    for m in [1, 2, 5, 10]:
-        if x <= m * magnitude:
-            return m * magnitude
-    return 10 * magnitude
+def compare(sektor, kon, years):
 
-def graf(sektor_i, kon_i, year_i):
-    sektor = sektor_i
-    kon = kon_i
-    year = year_i
-
-    awk_cmd = f"""
+    data = []
+    
+    for year in years:
+        awk_cmd = f"""
     awk -F',' '$1=="\\"{sektor}\\"" && $2=="\\"{kon}\\"" && $3 ~ /^"{year}/ && $4=="\\"Antal pågående anställningar\\"" {{print $0}}' data.csv
     """
-    result = subprocess.run(awk_cmd, shell=True, capture_output=True, text=True)
+        result = subprocess.run(awk_cmd, shell=True, capture_output=True, text=True)
 
-    df = pd.read_csv(StringIO(result.stdout), header=None,
+        df = pd.read_csv(StringIO(result.stdout), header=None,
                      names=['kommun','totalt','period','mått','värde'],
                      encoding='utf-8')
+        
+        data.append(df)
 
     manader = ["Januari","Februari","Mars","April","Maj","Juni","Juli",
                "Augusti","September", "Oktober", "November", "December"]
-
-    y_min = int(df['värde'].min())
-    y_max = int(df['värde'].max())
+    
+    y_min = int(data['värde'].min())
+    y_max = int(data['värde'].max())
 
     raw_step = (y_max - y_min) / 6
 
@@ -41,7 +38,7 @@ def graf(sektor_i, kon_i, year_i):
     positions = list(range(y_start, y_end + step, step))
 
     fig, ax = plt.subplots(figsize=(10,6))
-    ax.plot(df['period'], df['värde'], marker='o')
+    ax.plot(data['period'], data['värde'], marker='o')
     ax.set_title(f'Antal pågående anställningar {year} – {sektor}, {kon}')
     ax.set_xlabel('Månad')
     ax.set_ylabel('Antal', rotation=0, labelpad=30)
@@ -58,6 +55,6 @@ def graf(sektor_i, kon_i, year_i):
     buf.seek(0)
     return fig
 
-def get_options():
-    with open("csv_summary.json", "r", encoding="utf-8") as f:
-        return json.load(f)
+x = compare("kommun", "män", ["2024", "2023"])
+
+print(x)

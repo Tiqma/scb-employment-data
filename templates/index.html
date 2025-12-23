@@ -1,50 +1,64 @@
 <!DOCTYPE html>
-
 <html lang="sv">
 <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        Antal anställningar
-    </title>
+    <title>Antal anställningar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-
-
 <body>
-{% include 'header.html' %}
-    <form action="/graf" method="get">
-        <label for="sektor">Sektor:</label>
-        <select name="sektor" id="sektor">
-            {% for s in sektor %}
-            <option value="{{ s }}">{{ s }}</option>
-            {% endfor %}
-        </select>
-        <br><br>
+    {% include 'header.html' %}
 
-        <!-- Dropdown för kön -->
-        <label for="kon">Kön:</label>
-        <select name="kon" id="kon">
-            {% for k in kon %}
-            <option value="{{ k }}">{{ k }}</option>
-            {% endfor %}
-        </select>
-        <br><br>
+    <main>
+        <section class="card">
+            <h1>Antal anställningar</h1>
+            <p class="subtitle">
+                Välj sektor, kön och år för att visa statistik
+            </p>
 
-        <!-- Dropdown för år -->
-        <label for="år">År:</label>
-        <select name="år" id="år">
-            {% for a in ar %}
-            <option value="{{ a }}">{{ a }}</option>
-            {% endfor %}
-        </select>
-        <br><br>
-        <input type="submit" value="Skicka">
-    </form>
+            <form action="/graf" method="get" class="form-grid">
+                <div class="form-group">
+                    <label for="sektor">Sektor</label>
+                    <select name="sektor" id="sektor">
+                        {% for s in sektor %}
+                        <option value="{{ s }}">{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-    <div>
-        <img src="data:image/png;base64,{{ plot }}" alt="Graf">
-    </div>
+                <div class="form-group">
+                    <label for="kon">Kön</label>
+                    <select name="kon" id="kon">
+                        {% for k in kon %}
+                        <option value="{{ k }}">{{ k }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="år">År</label>
+                    <select name="år" id="år">
+                        {% for a in ar %}
+                        <option value="{{ a }}">{{ a }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <input type="submit" value="Visa graf">
+                </div>
+            </form>
+        </section>
+
+        {% if plot %}
+        <section class="card graph-card">
+            <h2>Resultat</h2>
+            <div class="graph-container">
+                <img src="data:image/png;base64,{{ plot }}" alt="Graf">
+            </div>
+        </section>
+        {% endif %}
+    </main>
 </body>
 </html>

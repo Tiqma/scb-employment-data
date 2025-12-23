@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request, send_file
 from analys import graf, get_options
+from compare import compare
 import base64
 from io import BytesIO
 import matplotlib.pyplot as plt
@@ -16,6 +17,11 @@ def index():
 
 @app.route("/graf", methods=["GET"])
 def grafroute():
+    innehall = get_options()
+    sektor_i = innehall["sektor"]
+    kon_i = innehall["kön"]
+    ar_i = innehall["år"]
+
     data  = request.args
     sektor = data.get("sektor")
     kon    = data.get("kon")
@@ -24,17 +30,25 @@ def grafroute():
     # Skapa grafen
     fig = graf(sektor, kon, år)
 
-    # Konvertera figuren till PNG i minnet
     buf = BytesIO()
     fig.savefig(buf, format="png")
-    plt.close(fig)  # stäng figuren för att frigöra minnet
+    plt.close(fig)
     buf.seek(0)
 
-    # Konvertera till Base64 så vi kan bädda in i HTML
     img_base64 = base64.b64encode(buf.getvalue()).decode("utf-8")
 
-    # Skicka Base64-strängen till templaten
-    return render_template("index.html", plot=img_base64)
+    return render_template("index.html", plot=img_base64, sektor=sektor_i, kon=kon_i, ar=ar_i)
+
+@app.route('/bild')
+def get_image():
+    # 1. Hämta buffern från din funktion
+    img_buf = compare("kommun", "män", ["2024", "2021", "2023"])
+    
+    # (Säkerhetsåtgärd: spola tillbaka bandet om det inte redan är gjort)
+    img_buf.seek(0) 
+
+    # 2. Skicka buffern som en bildfil
+    return send_file(img_buf, mimetype='image/png')
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -23,7 +23,6 @@
   "tabellinnehåll": [
     "Antal pågående anställningar",
     "Antal pågående anställningar - anställningstid >6 månader",
-    "Antal pågående anställningar - anställningstid <=6 månader",
-    "Årlig förändring av antalet pågående anställningar"
+    "Antal pågående anställningar - anställningstid <=6 månader"
   ]
 }
