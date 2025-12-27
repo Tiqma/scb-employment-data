@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antal anställningar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <main>
+        <section class="card">
+            <h1>Antal anställningar</h1>
+            <p class="subtitle">
+                Välj sektor, kön och år för att visa statistik
+            </p>
+
+            <form action="/bild" method="get" class="form-grid">
+                <div class="form-group">
+                    <label for="sektor">Sektor</label>
+                    <select name="sektor" id="sektor">
+                        {% for s in sektor %}
+                        <option value="{{ s }}">{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="kon">Kön</label>
+                    <select name="kon" id="kon">
+                        {% for k in kon %}
+                        <option value="{{ k }}">{{ k }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>År</label>
+                    <div class="checkbox-group">
+                        {% for a in ar %}
+                        <label>
+                            <input type="checkbox" name="år" value="{{ a }}">
+                            {{ a }}
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <input type="submit" value="Visa graf">
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

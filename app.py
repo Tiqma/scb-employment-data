@@ -27,7 +27,6 @@ def grafroute():
     kon    = data.get("kon")
     år     = data.get("år")
 
-    # Skapa grafen
     fig = graf(sektor, kon, år)
 
     buf = BytesIO()
@@ -39,15 +38,25 @@ def grafroute():
 
     return render_template("index.html", plot=img_base64, sektor=sektor_i, kon=kon_i, ar=ar_i)
 
+@app.route('/compare')
+def jamfor():
+    innehall = get_options()
+    sektor_i = innehall["sektor"]
+    kon_i = innehall["kön"]
+    ar_i = innehall["år"]
+
+    return render_template("compare.html", sektor=sektor_i, kon=kon_i, ar=ar_i)
+
 @app.route('/bild')
 def get_image():
-    # 1. Hämta buffern från din funktion
-    img_buf = compare("kommun", "män", ["2024", "2021", "2023"])
-    
-    # (Säkerhetsåtgärd: spola tillbaka bandet om det inte redan är gjort)
-    img_buf.seek(0) 
+    data  = request.args
+    sektor = data.get("sektor")
+    kon    = data.get("kon")
+    år     = data.getlist("år")
+    img_buf = compare(sektor, kon, år)
 
-    # 2. Skicka buffern som en bildfil
+    img_buf.seek(0)
+
     return send_file(img_buf, mimetype='image/png')
 
 if __name__ == "__main__":
